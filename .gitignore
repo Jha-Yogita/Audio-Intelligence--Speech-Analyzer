@@ -1,0 +1,50 @@
+# Python cache
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+
+ai_env/
+venv/
+env/
+.venv/
+
+# Python environment files
+
+pyvenv.cfg
+
+# Audio / generated files
+
+*.mp3
+*.wav
+*.flac
+*.ogg
+
+# Exported results
+
+*.txt
+
+# Logs
+
+*.log
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# VS Code
+
+.vscode/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Temporary files
+
+*.tmp
+*.temp
