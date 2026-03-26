@@ -4,18 +4,29 @@ import time
 import re
 from datetime import datetime
 import os
+speech_pipe = None
+llm = None
+def load_models():
+    global speech_pipe, llm
 
-speech_pipe = pipeline(
-    "automatic-speech-recognition",
-    model="openai/whisper-tiny.en",
-    chunk_length_s=15,
-    return_timestamps=True,
-)
+    if speech_pipe is None:
+        from transformers import pipeline
+        speech_pipe = pipeline(
+            "automatic-speech-recognition",
+            model="openai/whisper-tiny.en",
+            chunk_length_s=15,
+            return_timestamps=True,
+            device=-1
+        )
 
-llm = pipeline(
-    "text2text-generation",
-    model="google/flan-t5-small",
-)
+    if llm is None:
+        from transformers import pipeline
+        llm = pipeline(
+            "text2text-generation",
+            model="google/flan-t5-small",
+            device=-1
+        )
+
 
 
 def seconds_to_timestamp(s: float) -> str:
@@ -61,6 +72,7 @@ def llm_prompt(mode: str, text: str) -> str:
 
 
 def process_audio(audio_file, analysis_mode, max_summary_tokens):
+    load_models()
     if audio_file is None:
         return (
             "⚠️ No audio file provided. Please upload or record audio.",
@@ -70,7 +82,7 @@ def process_audio(audio_file, analysis_mode, max_summary_tokens):
     start = time.time()
 
     try:
-        result = speech_pipe(audio_file, batch_size=8)
+        result = speech_pipe(audio_file, batch_size=1)
         raw_text = result["text"].strip()
         chunks = result.get("chunks", [])
     except Exception as e:
@@ -394,7 +406,7 @@ with gr.Blocks(
             )
             gr.HTML("<div class='divider'></div>")
             max_tokens = gr.Slider(
-                minimum=64, maximum=512, value=256, step=32,
+                minimum=64, maximum=512, value=128, step=32,
                 label="Max Output Tokens",
             )
             gr.HTML("<div class='divider'></div>")
