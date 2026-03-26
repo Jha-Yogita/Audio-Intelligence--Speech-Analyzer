@@ -3,6 +3,7 @@ import gradio as gr
 import time
 import re
 from datetime import datetime
+import os
 
 speech_pipe = pipeline(
     "automatic-speech-recognition",
@@ -451,4 +452,5 @@ with gr.Blocks(
         outputs=[export_file],
     )
 
-demo.launch(server_port=7860, share=False)
+port = int(os.environ.get("PORT", 10000))
+demo.launch(server_name="0.0.0.0", server_port=port)
