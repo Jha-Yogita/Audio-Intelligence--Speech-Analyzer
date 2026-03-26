@@ -8,13 +8,13 @@ import os
 speech_pipe = pipeline(
     "automatic-speech-recognition",
     model="openai/whisper-tiny.en",
-    chunk_length_s=30,
+    chunk_length_s=15,
     return_timestamps=True,
 )
 
 llm = pipeline(
     "text2text-generation",
-    model="google/flan-t5-base",
+    model="google/flan-t5-small",
 )
 
 
